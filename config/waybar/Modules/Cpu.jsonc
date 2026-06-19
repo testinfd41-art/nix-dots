@@ -1,0 +1,8 @@
+{
+    "cpu": {
+        "format": " {usage}%",
+        "on-click": "foot btop",
+        "interval": 1
+    },
+
+}

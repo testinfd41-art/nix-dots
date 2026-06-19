@@ -1,0 +1,126 @@
+@import "colors.css";
+* {
+    font-family: JetBrainsMono Nerd Font;
+    font-size: 1rem;
+    font-weight:bold;
+    min-width: 8px;
+    min-height: 0px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+    padding: 0px 2px 0px 2px;
+    margin: 0;
+
+}
+
+window#waybar {
+    background: rgba(0,0,0,0.7);
+    border-radius: 0px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#workspaces button {
+    color: @main-fg;
+}
+
+#workspaces button.active {
+    transition: all 0.2s ease-in-out;
+    color: @main-fg;
+    border-radius: 24px;
+}
+
+#workspaces button:hover {
+    color: black;
+}
+
+tooltip {
+  border-radius: 32px;
+  transition: all 0.2s ease-in-out;
+}
+
+tooltip label {
+  color: white;
+  transition: all 0.2s ease-in-out;
+  padding: 12px 20px 12px 20px;
+}
+
+#temperature.warning,
+#temperature.critical,
+#battery.critical:not(.charging),
+#battery.warning:not(.charging),
+#battery.charging,
+#battery.plugged,
+#battery.full,
+#pulseaudio.muted,
+#network.disconnected,
+#network.disconnected {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  padding: 0px 7px;
+  margin: 4px 0px 4px 0px;
+}
+
+
+#workspaces,
+#temperature,
+#custom-img,
+#pulseaudio,
+#bluetooth,
+#network,
+#backlight,
+#battery,
+#custom-notification,
+#cpu,
+#tray,
+#memory,
+#disk,
+#clock {
+  color: @main-fg;
+  padding: 0px 7px;
+  margin: 4px 0px 4px 0px;
+}
+#workspaces {
+padding: 0px 4px 0px 4px;
+}
+
+#clock {
+   font-family: "Ubuntu Sans";
+       font-weight: 700;
+       font-size: 1.06rem;
+   }
+#battery.charging,
+#battery.plugged {
+background-color: #00aa01;
+}
+
+@keyframes blink {
+    to {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+    }
+}
+
+#battery.critical:not(.charging),
+#temperature.critical {
+background-color: #FF0000;
+animation-name: blink;
+animation-duration: 1.0s;
+animation-timing-function: steps(20);
+animation-iteration-count: infinite;
+animation-direction: alternate;
+}
+#battery.warning:not(.charging),
+#temperature.warning {
+background-color: #FF7300;
+}
+
+#battery.full {
+background-color: #5962ff;
+}
+#network.disconnected,
+#pulseaudio.muted {
+background-color: #f2000e;
+}

@@ -1,0 +1,29 @@
+{
+    "network": {
+        "format": "{icon}",
+        "format-icons": {
+          "wifi": [
+            "󰤨"
+          ],
+          "ethernet": [
+            "󰈀"
+          ],
+          "disconnected": [
+            "󰖪"
+          ]
+        },
+        "format-wifi": "󰤥",
+        "format-disabled": "󱚼",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰖪",
+        "format-linked": "󰈁",
+        "interval": 5,
+        "tooltip-format": "{ipaddr}",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)   \n{ipaddr} | {frequency} MHz{icon} ",
+        "tooltip-format-ethernet": "{ifname} 󰈀 \n{ipaddr} | {frequency} MHz{icon} ",
+        "tooltip-format-disconnected": "Not Connected to any type of Network",
+        "tooltip": true,
+        "on-click": "foot sh -c 'sudo nmtui'"
+    },
+
+}

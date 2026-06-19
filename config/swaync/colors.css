@@ -1,0 +1,15 @@
+:root {
+  --noti-bg: #1e1e2e;
+  --noti-fg: #cdd6f4;
+  --border: 1px solid rgba(205, 214, 244, 0.15);
+
+  /* Optional extra colors */
+  --color-red: #f38ba8;
+  --color-green: #a6e3a1;
+  --color-yellow: #f9e2af;
+  --color-blue: #89b4fa;
+  --color-magenta: #f5c2e7;
+  --color-cyan: #94e2d5;
+  --color-overlay: rgba(30, 30, 46, 0.3);
+}
+

@@ -1,0 +1,58 @@
+# ==============================================================================
+# SWAYLOCK MASTER CONFIGURATION
+# ==============================================================================
+
+# --- Core Behavior ---
+daemonize
+ignore-empty-password
+show-failed-attempts
+
+# --- Wallpaper & Layout ---
+image=/home/chris/walls/wallhaven-og33jl_2560x1440.png
+scaling=fill
+
+# --- Indicator Geometry ---
+# Scales up the center ring nicely on higher-res displays
+indicator-radius=100
+indicator-thickness=12
+
+# --- Borderless Aesthetics ---
+# Forces the edge-lines to mirror the inner fill color, removing retro borders
+line-uses-inside
+separator-color=00000000
+
+# --- Typography ---
+font=Sans
+font-size=18
+
+# --- Tokyo Night Translucent Color Palette (Hex: RRGGBBAA) ---
+
+# 1. Neutral Idle State
+inside-color=1a1a26cc
+ring-color=7aa2f7ff
+text-color=c0caf5ff
+
+# 2. Keypress & Backspace Feedback
+key-hl-color=9ece6aff
+bs-hl-color=f7768eff
+
+# 3. Verifying Password State
+inside-ver-color=1e223aac
+ring-ver-color=bb9af7ff
+text-ver-color=c0caf5ff
+
+# 4. Access Cleared State
+inside-clear-color=1c3328cc
+ring-clear-color=9ece6aff
+text-clear-color=9ece6aff
+
+# 5. Access Denied / Wrong Password State
+inside-wrong-color=4c1e2ecc
+ring-wrong-color=f7768eff
+text-wrong-color=f7768eff
+
+# 6. Caps Lock Warning States
+# Colors shift when Caps Lock is on to visibly warn you before typing
+caps-lock-key-hl-color=ff9e64ff
+caps-lock-bs-hl-color=f7768eff
+text-caps-lock-color=ff9e64ff

@@ -1,0 +1,14 @@
+{
+  "modules-right": [
+        "custom/notification",
+        "temperature",
+        "pulseaudio",
+        "cpu",
+        "network",
+        "bluetooth",
+        "battery",
+        "clock"
+
+    ]
+
+}

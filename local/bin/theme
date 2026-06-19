@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# Configuration
+STATE_FILE="$HOME/.config/.themes"
+WAYBAR_CONFIG="$HOME/.config/waybar/colors.css"
+WAYBAR_DARK="$HOME/.config/themes/dark.css"
+WAYBAR_LIGHT="$HOME/.config/themes/light.css"
+
+# Function to get current theme state
+get_current_theme() {
+    if [ -f "$STATE_FILE" ]; then
+        cat "$STATE_FILE"
+    else
+        echo "dark"
+    fi
+}
+
+# Function to set theme state
+set_theme_state() {
+    echo "$1" > "$STATE_FILE"
+}
+
+# Function to toggle GNOME apps theme
+toggle_gnome_theme() {
+    if [ "$1" = "dark" ]; then
+        dconf write /org/gnome/desktop/interface/color-scheme '"prefer-dark"'
+        gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark'
+    else
+        dconf write /org/gnome/desktop/interface/color-scheme '"prefer-light"'
+        gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+    fi
+}
+
+# Function to toggle waybar theme
+toggle_waybar_theme() {
+    if [ "$1" = "dark" ]; then
+        cp "$WAYBAR_DARK" "$WAYBAR_CONFIG"
+    else
+        cp "$WAYBAR_LIGHT" "$WAYBAR_CONFIG"
+    fi
+    
+}
+
+# Function to toggle niri theme
+toggle_niri_theme() {
+    if [ "$1" = "dark" ]; then
+        niri msg action set-color-scheme dark
+    else
+        niri msg action set-color-scheme light
+    fi
+}
+
+# Main logic
+current=$(get_current_theme)
+
+if [ "$current" = "dark" ]; then
+    new_theme="light"
+    echo "Switching to light theme..."
+else
+    new_theme="dark"
+    echo "Switching to dark theme..."
+fi
+
+# Trigger screen transition animation
+niri msg action do-screen-transition
+
+# Apply theme changes
+toggle_gnome_theme "$new_theme"
+toggle_waybar_theme "$new_theme"
+
+# Save new state
+set_theme_state "$new_theme"
+
+notify-send "Theme switched to $new_theme successfully!"
