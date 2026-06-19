@@ -108,6 +108,22 @@ window-rule {
     match title="Firefox"
     open-maximized true
 }
+window-rule {
+    match app-id=r#"^brave-browser$"#
+    open-maximized true
+}
+window-rule {
+    match app-id=r#"^obsidian$"#
+    open-maximized true
+}
+window-rule {
+    match app-id=r#"^Spotify"#
+    open-maximized true
+}
+window-rule {
+    match app-id=r#"^chromium-browser"#
+    open-maximized true
+}
 // Make top and overlay layers use the regular blur (if enabled),
 // while bottom and background layers keep using the efficient xray blur.
 // These are the default values:

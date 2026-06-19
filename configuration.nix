@@ -46,6 +46,7 @@
   services.udisks2.enable = true;
   services.tlp.enable = true;
   hardware.graphics.enable = true;
+  services.upower.enable = true;
 
   environment.systemPackages = with pkgs; [
     neovim
@@ -75,6 +76,7 @@
     evince
     ddcutil
     playerctl
+    brave
   ];
 
   fonts.packages = with pkgs; [
