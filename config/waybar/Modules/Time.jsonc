@@ -1,0 +1,15 @@
+{
+"custom/timer": {
+    "exec": "~/.local/bin/timer status",
+    "interval": 1,
+    "return-type": "json",
+    "on-click": "~/.local/bin/timer toggle",
+    "on-click-right": "~/.local/bin/time stop",
+    "on-click-middle": "~/.local/bin/timer reset",
+    "on-scroll-up": "~/.local/bin/timer start 1500",
+    "on-scroll-down": "~/.local/bin/timer start 300",
+    "format": "{}",
+    "tooltip": true
+},
+
+}

@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+# Timer script for Waybar
+
+STATE_FILE="/tmp/waybar-timer.state"
+NOTIFIED_FILE="/tmp/waybar-timer.notified"
+SOUND_PID_FILE="/tmp/waybar-timer-sound.pid"
+SOUND_FILE="$HOME/.config/waybar/beep.mp3"
+
+get_state() {
+    [[ ! -f "$STATE_FILE" ]] && echo "stopped 0 0 0" && return
+    cat "$STATE_FILE"
+}
+
+save_state() {
+    echo "$1 $2 $3 $4" > "$STATE_FILE"
+}
+
+kill_sound() {
+    if [[ -f "$SOUND_PID_FILE" ]]; then
+        pid=$(cat "$SOUND_PID_FILE")
+        # kill the bash loop and all its children via pkill parent
+        pkill -P "$pid" 2>/dev/null
+        kill "$pid" 2>/dev/null
+        rm -f "$SOUND_PID_FILE"
+    fi
+    pkill -f "mpv.*beep" 2>/dev/null
+    pkill -f "mpv.*_TIMER_SOUND" 2>/dev/null
+}
+
+play_sound_loop() {
+    [[ ! -f "$SOUND_FILE" ]] && return
+    export _TIMER_SOUND="$SOUND_FILE"
+    setsid bash -c 'while true; do mpv --no-config --no-video "$_TIMER_SOUND" 2>/dev/null; done' &
+    echo $! > "$SOUND_PID_FILE"
+}
+
+format_time() {
+    local secs=$1
+    local neg=""
+    if (( secs < 0 )); then
+        neg="-"
+        secs=$(( -secs ))
+    fi
+    printf "%s%02d:%02d" "$neg" $((secs / 60)) $((secs % 60))
+}
+
+case "$1" in
+    start)
+        dur="${2:-1500}"
+        now=$(date +%s)
+        kill_sound
+        rm -f "$NOTIFIED_FILE"
+        save_state "running" "$now" "$dur" "0"
+        ;;
+
+    stop)
+        kill_sound
+        rm -f "$NOTIFIED_FILE"
+        save_state "stopped" "0" "0" "0"
+        ;;
+
+    reset)
+        kill_sound
+        rm -f "$NOTIFIED_FILE"
+        save_state "stopped" "0" "0" "0"
+        ;;
+
+    toggle)
+        read -r status start dur paused < <(get_state)
+        now=$(date +%s)
+        # If ringing — stop the alarm
+        if [[ -f "$NOTIFIED_FILE" ]]; then
+            kill_sound
+            rm -f "$NOTIFIED_FILE"
+            save_state "stopped" "0" "0" "0"
+            exit 0
+        fi
+        if [[ "$status" == "running" ]]; then
+            elapsed=$(( now - start ))
+            remaining=$(( dur - elapsed ))
+            save_state "paused" "0" "$dur" "$remaining"
+        elif [[ "$status" == "paused" ]]; then
+            save_state "running" "$(( now - (dur - paused) ))" "$dur" "0"
+        else
+            save_state "running" "$now" "1500" "0"
+        fi
+        ;;
+
+    status)
+        read -r status start dur paused < <(get_state)
+        now=$(date +%s)
+
+        if [[ "$status" == "stopped" ]]; then
+            echo '{"text": "󱎫 --:--", "tooltip": "Timer stopped\nLeft-click: Start 25m | Right-click: Custom | Middle: Reset", "class": "stopped"}'
+            exit 0
+        fi
+
+        if [[ "$status" == "paused" ]]; then
+            remaining=$paused
+        else
+            elapsed=$(( now - start ))
+            remaining=$(( dur - elapsed ))
+        fi
+
+        # Fire notification + looping sound once when timer hits 0
+        if [[ "$status" == "running" ]] && (( remaining < 0 )); then
+            if [[ ! -f "$NOTIFIED_FILE" ]]; then
+                touch "$NOTIFIED_FILE"
+                notify-send -u critical -i "appointment-soon" "Timer" "Time's up! ⏰" -t 0
+                play_sound_loop
+            fi
+            echo "{\"text\": \"⏰ Time's up!\", \"tooltip\": \"Click to dismiss\", \"class\": \"urgent\"}"
+            exit 0
+        else
+            # Clean up if timer was reset externally
+            if [[ -f "$NOTIFIED_FILE" ]]; then
+                kill_sound
+                rm -f "$NOTIFIED_FILE"
+            fi
+        fi
+
+        time_str=$(format_time "$remaining")
+
+        if [[ "$status" == "paused" ]]; then
+            icon="󰏤"; class="paused"
+            tooltip="PAUSED: $time_str\nLeft-click: Resume | Right-click: Stop | Middle: Reset"
+        elif (( remaining <= 60 )); then
+            icon="󰄻"; class="urgent"
+            tooltip="$time_str remaining\nLeft-click: Pause | Right-click: Stop | Middle: Reset"
+        else
+            icon="󱎫"; class="running"
+            tooltip="$time_str remaining\nLeft-click: Pause | Right-click: Stop | Middle: Reset"
+        fi
+
+        echo "{\"text\": \"$icon $time_str\", \"tooltip\": \"$tooltip\", \"class\": \"$class\"}"
+        ;;
+
+    *)
+        echo "Usage: timer.sh [start <seconds>|stop|reset|toggle|status]"
+        ;;
+esac

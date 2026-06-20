@@ -11,6 +11,7 @@
         "custom/img",
         "niri/workspaces",
         "mpris",
+        "custom/timer"     
     ],
   	"niri/workspaces": {
 		"format": "{icon}",

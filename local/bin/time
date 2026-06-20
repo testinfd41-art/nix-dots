@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# timer-prompt.sh — fuzzel prompt to set custom timer duration
+
+TIMER="$HOME/.local/bin/timer"
+
+input=$(echo -e "25m\n5m\n10m\n15m\n30m\n45m\n1h\n90m" | \
+    fuzzel --dmenu --prompt "Timer: " --placeholder "e.g. 25m, 90s, 1h30m")
+
+[[ -z "$input" ]] && exit 0
+
+# Parse input like: 1h30m, 25m, 90s, 3600 (raw seconds)
+total=0
+while [[ "$input" =~ ^([0-9]+)([hms]?)(.*)$ ]]; do
+    num="${BASH_REMATCH[1]}"
+    unit="${BASH_REMATCH[2]}"
+    rest="${BASH_REMATCH[3]}"
+    case "$unit" in
+        h) total=$(( total + num * 3600 )) ;;
+        m) total=$(( total + num * 60 )) ;;
+        s) total=$(( total + num )) ;;
+        "") total=$(( total + num )) ;;  # raw seconds
+    esac
+    input="$rest"
+    [[ -z "$rest" ]] && break
+done
+
+(( total <= 0 )) && exit 1
+
+"$TIMER" start "$total"

@@ -2,7 +2,7 @@
 * {
     font-family: JetBrainsMono Nerd Font;
     font-size: 1rem;
-    font-weight:bold;
+    font-weight:normal;
     min-width: 8px;
     min-height: 0px;
     border: none;
@@ -88,7 +88,7 @@ padding: 0px 4px 0px 4px;
 
 #clock {
    font-family: "Ubuntu Sans";
-       font-weight: 700;
+       font-weight: normal;
        font-size: 1.06rem;
    }
 #battery.charging,
@@ -102,6 +102,35 @@ background-color: #00aa01;
         color: white;
     }
 }
+/* Add to your waybar style.css */
+
+#custom-timer {
+    padding: 0 10px;
+    color: #cdd6f4;
+}
+
+#custom-timer.stopped {
+    color: #6c7086;
+}
+
+#custom-timer.running {
+    color: #a6e3a1;
+}
+
+#custom-timer.paused {
+    color: #f9e2af;
+}
+
+#custom-timer.urgent {
+    color: #fab387;
+    animation: blink 1s step-start infinite;
+}
+
+#custom-timer.overtime {
+    color: #f38ba8;
+    animation: blink 0.5s step-start infinite;
+}
+
 
 #battery.critical:not(.charging),
 #temperature.critical {
